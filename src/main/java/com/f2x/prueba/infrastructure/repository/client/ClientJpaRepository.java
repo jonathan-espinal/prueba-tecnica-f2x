@@ -1,4 +1,4 @@
-package com.f2x.prueba.infrastructure.repository;
+package com.f2x.prueba.infrastructure.repository.client;
 
 import java.util.Optional;
 import java.util.UUID;

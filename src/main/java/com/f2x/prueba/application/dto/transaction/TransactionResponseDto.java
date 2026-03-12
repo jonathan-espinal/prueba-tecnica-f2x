@@ -1,4 +1,4 @@
-package com.f2x.prueba.application.dto;
+package com.f2x.prueba.application.dto.transaction;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

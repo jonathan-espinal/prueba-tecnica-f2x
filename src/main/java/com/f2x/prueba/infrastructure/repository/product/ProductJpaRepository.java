@@ -1,4 +1,4 @@
-package com.f2x.prueba.infrastructure.repository;
+package com.f2x.prueba.infrastructure.repository.product;
 
 import java.math.BigDecimal;
 import java.util.List;

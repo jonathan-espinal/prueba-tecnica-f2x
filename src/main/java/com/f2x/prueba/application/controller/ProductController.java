@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.f2x.prueba.application.dto.CreateProductRequestDto;
-import com.f2x.prueba.application.dto.ProductResponseDto;
-import com.f2x.prueba.application.dto.UpdateProductRequestDto;
+import com.f2x.prueba.application.dto.product.CreateProductRequestDto;
+import com.f2x.prueba.application.dto.product.ProductResponseDto;
+import com.f2x.prueba.application.dto.product.UpdateProductRequestDto;
 import com.f2x.prueba.domain.model.Product;
 import com.f2x.prueba.domain.service.ProductService;
 

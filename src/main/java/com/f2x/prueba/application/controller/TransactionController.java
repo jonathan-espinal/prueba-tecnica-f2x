@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.f2x.prueba.application.dto.CreateTransactionRequestDto;
-import com.f2x.prueba.application.dto.TransactionResponseDto;
+import com.f2x.prueba.application.dto.transaction.CreateTransactionRequestDto;
+import com.f2x.prueba.application.dto.transaction.TransactionResponseDto;
 import com.f2x.prueba.domain.model.Transaction;
 import com.f2x.prueba.domain.service.TransactionService;
 
