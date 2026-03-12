@@ -35,10 +35,6 @@ public class ProductService {
 
         product.setAccountNumber(generateUniqueAccountNumber(product.getType()));
         
-        if (productRepositoryPort.existsByAccountNumber(product.getAccountNumber())) {
-            throw new IllegalArgumentException("Account number already exists: " + product.getAccountNumber());
-        }
-        
         if (!product.isSavingsAccountBalanceValid()) {
             throw new IllegalArgumentException("Savings account cannot have negative balance");
         }
@@ -92,7 +88,7 @@ public class ProductService {
         if (productData.getStatus() != null) {
             existingProduct.setStatus(productData.getStatus());
         }
-        
+
         if (productData.isGmfExempt() != existingProduct.isGmfExempt()) {
             existingProduct.setGmfExempt(productData.isGmfExempt());
         }
