@@ -21,12 +21,4 @@ public interface ProductJpaRepository extends JpaRepository<ProductEntity, UUID>
     List<ProductEntity> findByClientId(@Param("clientId") UUID clientId);
     
     boolean existsByAccountNumber(String accountNumber);
-    
-    @Query("SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END " +
-           "FROM ProductEntity p WHERE p.client.id = :clientId")
-    boolean clientHasProducts(@Param("clientId") UUID clientId);
-    
-    @Query("SELECT COALESCE(SUM(p.balance), 0) " +
-           "FROM ProductEntity p WHERE p.client.id = :clientId")
-    BigDecimal getTotalBalanceByClientId(@Param("clientId") UUID clientId);
 }
