@@ -31,7 +31,7 @@ public class Product {
     private boolean gmfExempt;
     private LocalDate creationDate;
     private LocalDate modificationDate;
-    private UUID clientId; // Referencia al cliente dueño
+    private UUID clientId;
     
     
     public boolean isSavingsAccountBalanceValid() {

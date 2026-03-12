@@ -1,6 +1,5 @@
 package com.f2x.prueba.infrastructure.repository.product;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -74,16 +73,6 @@ public class ProductRepositoryAdapter implements ProductRepositoryPort {
     @Override
     public boolean existsByAccountNumber(String accountNumber) {
         return productJpaRepository.existsByAccountNumber(accountNumber);
-    }
-    
-    @Override
-    public boolean clientHasProducts(UUID clientId) {
-        return productJpaRepository.clientHasProducts(clientId);
-    }
-    
-    @Override
-    public BigDecimal getTotalBalanceByClientId(UUID clientId) {
-        return productJpaRepository.getTotalBalanceByClientId(clientId);
     }
     
     private ProductEntity toEntity(Product product) {

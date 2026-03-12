@@ -24,8 +24,4 @@ public interface ProductRepositoryPort {
     void deleteById(UUID id);
     
     boolean existsByAccountNumber(String accountNumber);
-    
-    boolean clientHasProducts(UUID clientId);
-    
-    java.math.BigDecimal getTotalBalanceByClientId(UUID clientId);
 }
