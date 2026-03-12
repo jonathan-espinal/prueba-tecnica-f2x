@@ -6,10 +6,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.stereotype.Service;
+
 import com.f2x.prueba.domain.model.Client;
 import com.f2x.prueba.domain.ports.ClientRepositoryPort;
 
 
+@Service
 public class ClientService {
     
     private final ClientRepositoryPort clientRepositoryPort;
