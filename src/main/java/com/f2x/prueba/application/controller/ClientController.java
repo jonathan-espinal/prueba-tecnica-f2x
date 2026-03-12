@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.f2x.prueba.application.dto.ClientResponseDto;
-import com.f2x.prueba.application.dto.CreateClientRequestDto;
-import com.f2x.prueba.application.dto.UpdateClientRequestDto;
+import com.f2x.prueba.application.dto.client.ClientResponseDto;
+import com.f2x.prueba.application.dto.client.CreateClientRequestDto;
+import com.f2x.prueba.application.dto.client.UpdateClientRequestDto;
 import com.f2x.prueba.domain.model.Client;
 import com.f2x.prueba.domain.service.ClientService;
 

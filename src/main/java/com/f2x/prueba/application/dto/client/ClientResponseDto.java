@@ -1,4 +1,4 @@
-package com.f2x.prueba.application.dto;
+package com.f2x.prueba.application.dto.client;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -10,9 +10,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * DTO para respuesta de cliente
- */
 @Data
 @Builder
 @NoArgsConstructor
@@ -28,9 +25,6 @@ public class ClientResponseDto {
     private LocalDate modificationDate;
     private boolean adult;
     
-    /**
-     * Método factory para crear ClientResponse desde Client (dominio)
-     */
     public static ClientResponseDto fromDomain(Client client) {
         return ClientResponseDto.builder()
             .id(client.getId())
