@@ -34,11 +34,13 @@ public class TransactionService {
         
         Product sourceProduct = null;
         Product destinationProduct = null;
-        
+
         if (transaction.getSourceProductId() != null) {
             sourceProduct = productRepositoryPort.findById(transaction.getSourceProductId())
                 .orElseThrow(() -> new IllegalArgumentException("Source product not found"));
         }
+
+        transaction.setClientId(sourceProduct.getClientId());
         
         if (transaction.getDestinationProductId() != null) {
             destinationProduct = productRepositoryPort.findById(transaction.getDestinationProductId())
