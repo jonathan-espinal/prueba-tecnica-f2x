@@ -9,8 +9,8 @@ import java.util.concurrent.ThreadLocalRandom;
 import org.springframework.stereotype.Service;
 
 import com.f2x.prueba.domain.model.Product;
-import com.f2x.prueba.domain.model.Product.ProductStatus;
-import com.f2x.prueba.domain.model.Product.ProductType;
+import com.f2x.prueba.shared.ProductEnums.ProductStatus;
+import com.f2x.prueba.shared.ProductEnums.ProductType;
 import com.f2x.prueba.domain.ports.ClientRepositoryPort;
 import com.f2x.prueba.domain.ports.ProductRepositoryPort;
 
@@ -49,8 +49,7 @@ public class ProductService {
         return productRepositoryPort.save(product);
     }
 
-
-    private String generateUniqueAccountNumber(ProductType type) {
+  private String generateUniqueAccountNumber(ProductType type) {
         String accountNumber;
         int attempts = 0;
         final int MAX_ATTEMPTS = 10;
@@ -152,3 +151,4 @@ public class ProductService {
         return String.format("%0" + length + "d", random);
     }
 }
+

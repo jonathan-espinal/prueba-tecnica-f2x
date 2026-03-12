@@ -4,6 +4,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import com.f2x.prueba.shared.ProductEnums.ProductStatus;
+import com.f2x.prueba.shared.ProductEnums.ProductType;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,16 +33,6 @@ public class Product {
     private LocalDate modificationDate;
     private UUID clientId; // Referencia al cliente dueño
     
-    public enum ProductType {
-        CURRENT_ACCOUNT,
-        SAVINGS_ACCOUNT
-    }
-    
-    public enum ProductStatus {
-        ACTIVE,
-        INACTIVE,
-        CANCELLED
-    }
     
     public boolean isSavingsAccountBalanceValid() {
         if (type == ProductType.SAVINGS_ACCOUNT && balance.compareTo(BigDecimal.ZERO) < 0) {
