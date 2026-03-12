@@ -74,3 +74,4 @@ public class Transaction {
         return amount.subtract(gmf);
     }
 }
+

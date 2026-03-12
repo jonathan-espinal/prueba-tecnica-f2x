@@ -83,11 +83,6 @@ public class TransactionService {
         if (!transaction.isTransferToDifferentAccount()) {
             throw new IllegalArgumentException("Cannot transfer to the same account");
         }
-        
-        // Validar duplicados
-        if (transactionRepositoryPort.existsDuplicate(transaction)) {
-            throw new IllegalArgumentException("Duplicate transaction detected");
-        }
     }
     
     private void validateDeposit(Transaction transaction, Product destinationProduct) {
