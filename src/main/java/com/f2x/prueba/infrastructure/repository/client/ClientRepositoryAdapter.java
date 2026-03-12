@@ -66,8 +66,7 @@ public class ClientRepositoryAdapter implements ClientRepositoryPort {
     
     @Override
     public boolean hasProducts(UUID clientId) {
-        // @TODO: Validate producst...
-        return false;
+        return clientJpaRepository.hasProducts(clientId);
     }
     
     private ClientEntity toEntity(Client client) {
