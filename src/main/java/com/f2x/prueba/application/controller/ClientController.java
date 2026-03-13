@@ -20,13 +20,19 @@ import com.f2x.prueba.application.dto.client.CreateClientRequestDto;
 import com.f2x.prueba.application.dto.client.UpdateClientRequestDto;
 import com.f2x.prueba.domain.model.Client;
 import com.f2x.prueba.domain.service.ClientService;
+import com.f2x.prueba.domain.service.TransactionService;
 
 import jakarta.validation.Valid;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 @RestController
 @RequestMapping("/api/v1/clients")
 public class ClientController {
+
+    private static final Logger log = LoggerFactory.getLogger(TransactionService.class);
     
     private final ClientService clientService;
     
@@ -39,6 +45,8 @@ public class ClientController {
     public ResponseEntity<ClientResponseDto> createClient(
             @Valid @RequestBody CreateClientRequestDto request) {
         
+        log.info("create-client");
+
         Client client = toDomain(request);
         
         Client createdClient = clientService.createClient(client);
@@ -53,6 +61,9 @@ public class ClientController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ClientResponseDto> getClient(@PathVariable UUID id) {
+
+        log.info("get-client {}", id);
+
         return clientService.getClientById(id)
             .map(client -> ResponseEntity.ok(ClientResponseDto.fromDomain(client)))
             .orElse(ResponseEntity.notFound().build());
@@ -61,6 +72,9 @@ public class ClientController {
 
     @GetMapping
     public ResponseEntity<List<ClientResponseDto>> getAllClients() {
+
+        log.info("get-all-clients");
+
         List<ClientResponseDto> clients = clientService.getAllClients().stream()
             .map(ClientResponseDto::fromDomain)
             .collect(Collectors.toList());
@@ -73,6 +87,8 @@ public class ClientController {
     public ResponseEntity<ClientResponseDto> updateClient(
             @PathVariable UUID id,
             @Valid @RequestBody UpdateClientRequestDto request) {
+
+        log.info("update-client {}", id);
         
         Client clientData = toDomain(request);
         
@@ -86,6 +102,9 @@ public class ClientController {
     
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteClient(@PathVariable UUID id) {
+
+        log.info("delete-client {}", id);
+
         clientService.deleteClient(id);
         return ResponseEntity.noContent().build();
     }

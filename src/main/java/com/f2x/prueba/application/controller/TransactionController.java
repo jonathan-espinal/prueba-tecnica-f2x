@@ -20,10 +20,15 @@ import com.f2x.prueba.domain.service.TransactionService;
 
 import jakarta.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 @RestController
 @RequestMapping("/api/v1/transactions")
 public class TransactionController {
+
+    private static final Logger log = LoggerFactory.getLogger(TransactionService.class);
     
     private final TransactionService transactionService;
     
@@ -34,6 +39,8 @@ public class TransactionController {
     @PostMapping
     public ResponseEntity<TransactionResponseDto> executeTransaction(
             @Valid @RequestBody CreateTransactionRequestDto request) {
+
+        log.info("execute-transaction");
         
         Transaction transaction = toDomain(request);
         
@@ -48,6 +55,9 @@ public class TransactionController {
     
     @GetMapping("/{id}")
     public ResponseEntity<TransactionResponseDto> getTransaction(@PathVariable UUID id) {
+
+        log.info("get-transaction {}", id);
+
         return transactionService.getTransactionById(id)
             .map(transaction -> ResponseEntity.ok(TransactionResponseDto.fromDomain(transaction)))
             .orElse(ResponseEntity.notFound().build());
@@ -56,6 +66,9 @@ public class TransactionController {
     @GetMapping("/product/{productId}")
     public ResponseEntity<List<TransactionResponseDto>> getTransactionsByProductId(
             @PathVariable UUID productId) {
+        
+        log.info("get-transaction-by-product-id {}", productId);
+
         List<TransactionResponseDto> transactions = transactionService.getTransactionsByProductId(productId).stream()
             .map(TransactionResponseDto::fromDomain)
             .collect(Collectors.toList());
@@ -66,6 +79,9 @@ public class TransactionController {
     @GetMapping("/client/{clientId}")
     public ResponseEntity<List<TransactionResponseDto>> getTransactionsByClientId(
             @PathVariable UUID clientId) {
+
+        log.info("get-transaction-by-client-id {}", clientId);
+
         List<TransactionResponseDto> transactions = transactionService.getTransactionsByClientId(clientId).stream()
             .map(TransactionResponseDto::fromDomain)
             .collect(Collectors.toList());
@@ -75,6 +91,9 @@ public class TransactionController {
     
     @GetMapping
     public ResponseEntity<List<TransactionResponseDto>> getAllTransactions() {
+
+        log.info("get-all-transactions");
+
         List<TransactionResponseDto> transactions = transactionService.getAllTransactions().stream()
             .map(TransactionResponseDto::fromDomain)
             .collect(Collectors.toList());
