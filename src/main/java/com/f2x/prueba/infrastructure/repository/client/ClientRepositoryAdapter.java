@@ -68,6 +68,11 @@ public class ClientRepositoryAdapter implements ClientRepositoryPort {
     public boolean hasProducts(UUID clientId) {
         return clientJpaRepository.hasProducts(clientId);
     }
+
+    @Override
+    public boolean hasProduct(UUID clientId, UUID productId) {
+        return clientJpaRepository.hasProduct(clientId, productId);
+    }
     
     private ClientEntity toEntity(Client client) {
         return ClientEntity.builder()

@@ -82,9 +82,6 @@ public class TransactionController {
         return ResponseEntity.ok(transactions);
     }
     
-    /**
-     * Convierte CreateTransactionRequestDto → Transaction (dominio)
-     */
     private Transaction toDomain(CreateTransactionRequestDto request) {
         return Transaction.builder()
             .type(request.getType())
@@ -92,6 +89,7 @@ public class TransactionController {
             .description(request.getDescription())
             .sourceProductId(request.getSourceProductId())
             .destinationProductId(request.getDestinationProductId())
+            .clientId(request.getClientId())
             .build();
     }
 }

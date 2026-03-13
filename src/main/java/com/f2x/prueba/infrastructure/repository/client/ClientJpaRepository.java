@@ -20,4 +20,8 @@ public interface ClientJpaRepository extends JpaRepository<ClientEntity, UUID> {
     @Query("SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END " +
            "FROM ProductEntity p WHERE p.client.id = :clientId")
     boolean hasProducts(@Param("clientId") UUID clientId);
+
+    @Query("SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END " +
+           "FROM ProductEntity p WHERE p.client.id = :clientId AND p.id = :productId")
+    boolean hasProduct(@Param("clientId") UUID clientId, @Param("productId") UUID productId);
 }

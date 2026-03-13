@@ -23,4 +23,6 @@ public interface ClientRepositoryPort {
     boolean existsByEmail(String email);
     
     boolean hasProducts(UUID clientId);
+
+    boolean hasProduct(UUID clientId, UUID productId);
 }
