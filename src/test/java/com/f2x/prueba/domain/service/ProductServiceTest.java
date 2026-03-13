@@ -71,7 +71,7 @@ class ProductServiceTest {
 
     @Test
     void createProduct_WithValidData_ShouldReturnCreatedProduct() {
-        // Arrange
+        
         Product newProduct = Product.builder()
                 .type(ProductType.CURRENT_ACCOUNT)
                 .balance(BigDecimal.valueOf(500.00))
@@ -91,10 +91,8 @@ class ProductServiceTest {
             return product;
         });
 
-        // Act
         Product result = productService.createProduct(newProduct);
 
-        // Assert
         assertNotNull(result);
         assertNotNull(result.getId());
         assertNotNull(result.getAccountNumber());
@@ -112,7 +110,7 @@ class ProductServiceTest {
 
     @Test
     void createProduct_WithSavingsAccountAndNegativeBalance_ShouldThrowException() {
-        // Arrange
+
         Product invalidProduct = Product.builder()
                 .type(ProductType.SAVINGS_ACCOUNT)
                 .balance(BigDecimal.valueOf(-100.00)) // Balance negativo para cuenta de ahorros
@@ -121,7 +119,6 @@ class ProductServiceTest {
 
         when(clientRepositoryPort.findById(clientId)).thenReturn(Optional.of(validClient));
 
-        // Act & Assert
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> productService.createProduct(invalidProduct)
@@ -134,7 +131,7 @@ class ProductServiceTest {
 
     @Test
     void createProduct_WhenClientNotFound_ShouldThrowException() {
-        // Arrange
+
         Product newProduct = Product.builder()
                 .type(ProductType.CURRENT_ACCOUNT)
                 .balance(BigDecimal.valueOf(500.00))
@@ -143,7 +140,6 @@ class ProductServiceTest {
 
         when(clientRepositoryPort.findById(clientId)).thenReturn(Optional.empty());
 
-        // Act & Assert
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> productService.createProduct(newProduct)
@@ -157,7 +153,7 @@ class ProductServiceTest {
 
     @Test
     void createProduct_WithSavingsAccountAndValidBalance_ShouldSucceed() {
-        // Arrange
+
         Product savingsProduct = Product.builder()
                 .type(ProductType.SAVINGS_ACCOUNT)
                 .balance(BigDecimal.valueOf(1000.00)) // Balance positivo
@@ -176,10 +172,8 @@ class ProductServiceTest {
             return product;
         });
 
-        // Act
         Product result = productService.createProduct(savingsProduct);
 
-        // Assert
         assertNotNull(result);
         assertEquals(ProductType.SAVINGS_ACCOUNT, result.getType());
         assertTrue(result.getAccountNumber().startsWith("53"));
@@ -192,13 +186,11 @@ class ProductServiceTest {
 
     @Test
     void getProductById_WhenProductExists_ShouldReturnProduct() {
-        // Arrange
+        
         when(productRepositoryPort.findById(productId)).thenReturn(Optional.of(validProduct));
 
-        // Act
         Optional<Product> result = productService.getProductById(productId);
 
-        // Assert
         assertTrue(result.isPresent());
         assertEquals(validProduct.getId(), result.get().getId());
         assertEquals(validProduct.getAccountNumber(), result.get().getAccountNumber());
@@ -207,27 +199,23 @@ class ProductServiceTest {
 
     @Test
     void getProductById_WhenProductDoesNotExist_ShouldReturnEmpty() {
-        // Arrange
+        
         when(productRepositoryPort.findById(productId)).thenReturn(Optional.empty());
 
-        // Act
         Optional<Product> result = productService.getProductById(productId);
 
-        // Assert
         assertTrue(result.isEmpty());
         verify(productRepositoryPort).findById(productId);
     }
 
     @Test
     void getProductsByClientId_ShouldReturnProducts() {
-        // Arrange
+
         List<Product> products = List.of(validProduct);
         when(productRepositoryPort.findByClientId(clientId)).thenReturn(products);
 
-        // Act
         List<Product> result = productService.getProductsByClientId(clientId);
 
-        // Assert
         assertEquals(1, result.size());
         assertEquals(validProduct.getId(), result.get(0).getId());
         verify(productRepositoryPort).findByClientId(clientId);
@@ -235,14 +223,12 @@ class ProductServiceTest {
 
     @Test
     void getAllProducts_ShouldReturnAllProducts() {
-        // Arrange
+        
         List<Product> products = List.of(validProduct);
         when(productRepositoryPort.findAll()).thenReturn(products);
 
-        // Act
         List<Product> result = productService.getAllProducts();
 
-        // Assert
         assertEquals(1, result.size());
         assertEquals(validProduct.getId(), result.get(0).getId());
         verify(productRepositoryPort).findAll();
@@ -250,7 +236,7 @@ class ProductServiceTest {
 
     @Test
     void updateProduct_WithValidStatusChange_ShouldReturnUpdatedProduct() {
-        // Arrange
+        
         Product updateData = Product.builder()
                 .status(ProductStatus.INACTIVE)
                 .gmfExempt(true)
@@ -259,10 +245,8 @@ class ProductServiceTest {
         when(productRepositoryPort.findById(productId)).thenReturn(Optional.of(validProduct));
         when(productRepositoryPort.update(any(Product.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        // Act
         Product result = productService.updateProduct(productId, updateData);
 
-        // Assert
         assertNotNull(result);
         assertEquals(ProductStatus.INACTIVE, result.getStatus());
         assertTrue(result.isGmfExempt());
@@ -274,14 +258,13 @@ class ProductServiceTest {
 
     @Test
     void updateProduct_WhenProductNotFound_ShouldThrowException() {
-        // Arrange
+
         Product updateData = Product.builder()
                 .status(ProductStatus.INACTIVE)
                 .build();
 
         when(productRepositoryPort.findById(productId)).thenReturn(Optional.empty());
 
-        // Act & Assert
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> productService.updateProduct(productId, updateData)
@@ -294,7 +277,7 @@ class ProductServiceTest {
 
     @Test
     void updateProduct_WithCancelledStatusAndNonZeroBalance_ShouldThrowException() {
-        // Arrange
+
         Product productWithBalance = Product.builder()
                 .id(productId)
                 .type(ProductType.CURRENT_ACCOUNT)
@@ -313,7 +296,6 @@ class ProductServiceTest {
 
         when(productRepositoryPort.findById(productId)).thenReturn(Optional.of(productWithBalance));
 
-        // Act & Assert
         IllegalStateException exception = assertThrows(
                 IllegalStateException.class,
                 () -> productService.updateProduct(productId, updateData)
@@ -326,14 +308,12 @@ class ProductServiceTest {
 
     @Test
     void changeProductStatus_WithValidStatus_ShouldReturnUpdatedProduct() {
-        // Arrange
+        
         when(productRepositoryPort.findById(productId)).thenReturn(Optional.of(validProduct));
         when(productRepositoryPort.update(any(Product.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        // Act
         Product result = productService.changeProductStatus(productId, ProductStatus.INACTIVE);
 
-        // Assert
         assertNotNull(result);
         assertEquals(ProductStatus.INACTIVE, result.getStatus());
         assertNotNull(result.getModificationDate());
@@ -344,7 +324,7 @@ class ProductServiceTest {
 
     @Test
     void changeProductStatus_WithCancelledStatusAndZeroBalance_ShouldSucceed() {
-        // Arrange
+
         Product zeroBalanceProduct = Product.builder()
                 .id(productId)
                 .type(ProductType.CURRENT_ACCOUNT)
@@ -360,10 +340,8 @@ class ProductServiceTest {
         when(productRepositoryPort.findById(productId)).thenReturn(Optional.of(zeroBalanceProduct));
         when(productRepositoryPort.update(any(Product.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        // Act
         Product result = productService.changeProductStatus(productId, ProductStatus.CANCELLED);
 
-        // Assert
         assertNotNull(result);
         assertEquals(ProductStatus.CANCELLED, result.getStatus());
         assertNotNull(result.getModificationDate());
@@ -374,7 +352,7 @@ class ProductServiceTest {
 
     @Test
     void deleteProduct_WhenProductIsCancelled_ShouldDelete() {
-        // Arrange
+        
         Product cancelledProduct = Product.builder()
                 .id(productId)
                 .type(ProductType.CURRENT_ACCOUNT)
@@ -389,20 +367,17 @@ class ProductServiceTest {
 
         when(productRepositoryPort.findById(productId)).thenReturn(Optional.of(cancelledProduct));
 
-        // Act
         productService.deleteProduct(productId);
 
-        // Assert
         verify(productRepositoryPort).findById(productId);
         verify(productRepositoryPort).deleteById(productId);
     }
 
     @Test
     void deleteProduct_WhenProductIsNotCancelled_ShouldThrowException() {
-        // Arrange
+        
         when(productRepositoryPort.findById(productId)).thenReturn(Optional.of(validProduct));
 
-        // Act & Assert
         IllegalStateException exception = assertThrows(
                 IllegalStateException.class,
                 () -> productService.deleteProduct(productId)
@@ -415,10 +390,9 @@ class ProductServiceTest {
 
     @Test
     void deleteProduct_WhenProductNotFound_ShouldThrowException() {
-        // Arrange
+        
         when(productRepositoryPort.findById(productId)).thenReturn(Optional.empty());
 
-        // Act & Assert
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> productService.deleteProduct(productId)
