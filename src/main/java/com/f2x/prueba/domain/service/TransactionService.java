@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.f2x.prueba.domain.model.Product;
 import com.f2x.prueba.domain.model.Transaction;
@@ -20,6 +21,7 @@ import com.f2x.prueba.shared.TransactionEnums.TransactionStatus;
 
 
 @Service
+@Transactional
 public class TransactionService {
     
     private final TransactionRepositoryPort transactionRepositoryPort;
