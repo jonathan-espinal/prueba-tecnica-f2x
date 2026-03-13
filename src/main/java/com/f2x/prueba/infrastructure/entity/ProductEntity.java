@@ -32,6 +32,7 @@ public class ProductEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(columnDefinition = "uuid")
     private UUID id;
     
     @Enumerated(EnumType.STRING)

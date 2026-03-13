@@ -24,6 +24,7 @@ public class ClientEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(columnDefinition = "uuid")
     private UUID id;
     
     @Column(name = "first_name", nullable = false, length = 100)
