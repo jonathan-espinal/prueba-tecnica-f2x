@@ -21,13 +21,19 @@ import com.f2x.prueba.application.dto.product.ProductResponseDto;
 import com.f2x.prueba.application.dto.product.UpdateProductRequestDto;
 import com.f2x.prueba.domain.model.Product;
 import com.f2x.prueba.domain.service.ProductService;
+import com.f2x.prueba.domain.service.TransactionService;
 
 import jakarta.validation.Valid;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 @RestController
 @RequestMapping("/api/v1/products")
 public class ProductController {
+
+    private static final Logger log = LoggerFactory.getLogger(TransactionService.class);
     
     private final ProductService productService;
     
@@ -38,6 +44,8 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<ProductResponseDto> createProduct(
             @Valid @RequestBody CreateProductRequestDto request) {
+        
+        log.info("create-product");
         
         Product product = toDomain(request);
         
@@ -52,6 +60,9 @@ public class ProductController {
     
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponseDto> getProduct(@PathVariable UUID id) {
+
+        log.info("get-product");
+
         return productService.getProductById(id)
             .map(product -> ResponseEntity.ok(ProductResponseDto.fromDomain(product)))
             .orElse(ResponseEntity.notFound().build());
@@ -60,6 +71,9 @@ public class ProductController {
     @GetMapping("/account/{accountNumber}")
     public ResponseEntity<ProductResponseDto> getProductByAccountNumber(
             @PathVariable String accountNumber) {
+
+        log.info("get-product-by-account-number {}", accountNumber);
+        
         return productService.getProductByAccountNumber(accountNumber)
             .map(product -> ResponseEntity.ok(ProductResponseDto.fromDomain(product)))
             .orElse(ResponseEntity.notFound().build());
@@ -68,6 +82,9 @@ public class ProductController {
     @GetMapping("/client/{clientId}")
     public ResponseEntity<List<ProductResponseDto>> getProductsByClientId(
             @PathVariable UUID clientId) {
+
+        log.info("get-product-by-client-id {}", clientId);
+
         List<ProductResponseDto> products = productService.getProductsByClientId(clientId).stream()
             .map(ProductResponseDto::fromDomain)
             .collect(Collectors.toList());
@@ -77,6 +94,9 @@ public class ProductController {
     
     @GetMapping
     public ResponseEntity<List<ProductResponseDto>> getAllProducts() {
+
+        log.info("get-all-products");
+
         List<ProductResponseDto> products = productService.getAllProducts().stream()
             .map(ProductResponseDto::fromDomain)
             .collect(Collectors.toList());
@@ -89,6 +109,8 @@ public class ProductController {
             @PathVariable UUID id,
             @Valid @RequestBody UpdateProductRequestDto request) {
         
+        log.info("update-product {}", id);
+
         Product productData = toDomain(request);
         
         Product updatedProduct = productService.updateProduct(id, productData);
@@ -103,6 +125,8 @@ public class ProductController {
             @PathVariable UUID id,
             @RequestBody UpdateProductRequestDto request) {
         
+        log.info("change-product-status {}", id);
+        
         if (request.getStatus() == null) {
             return ResponseEntity.badRequest().build();
         }
@@ -115,6 +139,9 @@ public class ProductController {
     
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable UUID id) {
+
+        log.info("delete-product {}", id);
+
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
