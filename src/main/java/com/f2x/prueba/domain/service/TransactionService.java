@@ -10,10 +10,12 @@ import org.springframework.stereotype.Service;
 
 import com.f2x.prueba.domain.model.Product;
 import com.f2x.prueba.domain.model.Transaction;
+import com.f2x.prueba.domain.ports.ClientRepositoryPort;
 import com.f2x.prueba.domain.ports.ProductRepositoryPort;
 import com.f2x.prueba.domain.ports.TransactionRepositoryPort;
 import com.f2x.prueba.shared.ProductEnums.ProductStatus;
 import com.f2x.prueba.shared.ProductEnums.ProductType;
+import com.f2x.prueba.shared.TransactionEnums.TransactionType;
 import com.f2x.prueba.shared.TransactionEnums.TransactionStatus;
 
 
@@ -22,11 +24,14 @@ public class TransactionService {
     
     private final TransactionRepositoryPort transactionRepositoryPort;
     private final ProductRepositoryPort productRepositoryPort;
+    private final ClientRepositoryPort clientRepositoryPort;
     
     public TransactionService(TransactionRepositoryPort transactionRepositoryPort,
-                             ProductRepositoryPort productRepositoryPort) {
+                             ProductRepositoryPort productRepositoryPort,
+                             ClientRepositoryPort clientRepositoryPort) {
         this.transactionRepositoryPort = transactionRepositoryPort;
         this.productRepositoryPort = productRepositoryPort;
+        this.clientRepositoryPort = clientRepositoryPort;
     }
     
     public Transaction executeTransaction(Transaction transaction) {
@@ -40,7 +45,16 @@ public class TransactionService {
                 .orElseThrow(() -> new IllegalArgumentException("Source product not found"));
         }
 
-        transaction.setClientId(sourceProduct.getClientId());
+        if (transaction.getType() == TransactionType.TRANSFER ||
+            transaction.getType() == TransactionType.WITHDRAWAL) {
+            if(!clientRepositoryPort.hasProduct(transaction.getClientId(), transaction.getSourceProductId())) {
+                throw new IllegalArgumentException("Client does not exist");
+            }
+        } else {
+            if(clientRepositoryPort.findById(transaction.getClientId()).isEmpty()) {
+                throw new IllegalArgumentException("Client does not exist");
+            }
+        }
         
         if (transaction.getDestinationProductId() != null) {
             destinationProduct = productRepositoryPort.findById(transaction.getDestinationProductId())
