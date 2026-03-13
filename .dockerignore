@@ -1,0 +1,32 @@
+# Archivos de Git
+.git
+.gitignore
+.gitattributes
+
+# Archivos de Maven
+target/
+.mvn/
+mvnw
+mvnw.cmd
+
+# Archivos de IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de logs
+logs/
+
+# Archivos de base de datos SQLite
+*.db
+*.sqlite
+
+# Archivos de configuración local
+*.properties.local
+*.yml.local
