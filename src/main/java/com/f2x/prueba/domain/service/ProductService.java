@@ -4,13 +4,10 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
-
 import org.springframework.stereotype.Service;
 
 import com.f2x.prueba.domain.model.Product;
 import com.f2x.prueba.shared.ProductEnums.ProductStatus;
-import com.f2x.prueba.shared.ProductEnums.ProductType;
 import com.f2x.prueba.domain.ports.ClientRepositoryPort;
 import com.f2x.prueba.domain.ports.ProductRepositoryPort;
 
@@ -20,11 +17,14 @@ public class ProductService {
     
     private final ProductRepositoryPort productRepositoryPort;
     private final ClientRepositoryPort clientRepositoryPort;
+    private final AccountNumberService accountNumberService;
     
     public ProductService(ProductRepositoryPort productRepositoryPort, 
-                         ClientRepositoryPort clientRepositoryPort) {
+                         ClientRepositoryPort clientRepositoryPort,
+                         AccountNumberService accountNumberService) {
         this.productRepositoryPort = productRepositoryPort;
         this.clientRepositoryPort = clientRepositoryPort;
+        this.accountNumberService = accountNumberService;
     }
     
     public Product createProduct(Product product) {
@@ -33,7 +33,9 @@ public class ProductService {
             throw new IllegalArgumentException("Client not found with id: " + product.getClientId());
         }
 
-        product.setAccountNumber(generateUniqueAccountNumber(product.getType()));
+        // Usar el nuevo servicio para generar número de cuenta único
+        String accountNumber = accountNumberService.generateUniqueAccountNumber(product.getType());
+        product.setAccountNumber(accountNumber);
         
         if (!product.isSavingsAccountBalanceValid()) {
             throw new IllegalArgumentException("Savings account cannot have negative balance");
@@ -49,32 +51,6 @@ public class ProductService {
         return productRepositoryPort.save(product);
     }
 
-  private String generateUniqueAccountNumber(ProductType type) {
-        String accountNumber;
-        int attempts = 0;
-        final int MAX_ATTEMPTS = 10;
-        
-        do {
-            accountNumber = generateAccountNumber(type);
-            attempts++;
-            
-            if (attempts >= MAX_ATTEMPTS) {
-                throw new IllegalStateException("Cannot generate unique account number after " + MAX_ATTEMPTS + " attempts");
-            }
-            
-        } while (productRepositoryPort.existsByAccountNumber(accountNumber));
-        
-        return accountNumber;
-    }
-    
-
-    private String generateAccountNumber(ProductType type) {
-        String prefix = (type == ProductType.CURRENT_ACCOUNT) ? Product.CURRENT_ACCOUNT_PREFIX : Product.SAVINGS_ACCOUNT_PREFIX;
-        String randomDigits = generateRandomDigits(Product.MAX_LENGTH_DIGITS - prefix.length());
-        return prefix + randomDigits;
-    }
-    
-    
     public Product updateProduct(UUID id, Product productData) {
         Product existingProduct = productRepositoryPort.findById(id)
             .orElseThrow(() -> new IllegalArgumentException("Product not found with id: " + id));
@@ -141,14 +117,6 @@ public class ProductService {
         product.setModificationDate(LocalDate.now());
         
         return productRepositoryPort.update(product);
-    }
-    
-
-    private String generateRandomDigits(int length) {
-        long min = (long) Math.pow(10, length - 1);
-        long max = (long) Math.pow(10, length) - 1;
-        long random = ThreadLocalRandom.current().nextLong(min, max + 1);
-        return String.format("%0" + length + "d", random);
     }
 }
 

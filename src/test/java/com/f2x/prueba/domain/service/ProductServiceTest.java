@@ -21,7 +21,6 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,6 +31,9 @@ class ProductServiceTest {
 
     @Mock
     private ClientRepositoryPort clientRepositoryPort;
+
+    @Mock
+    private AccountNumberService accountNumberService;
 
     @InjectMocks
     private ProductService productService;
@@ -79,8 +81,10 @@ class ProductServiceTest {
                 .clientId(clientId)
                 .build();
 
+        String generatedAccountNumber = "3309876543";
+
         when(clientRepositoryPort.findById(clientId)).thenReturn(Optional.of(validClient));
-        when(productRepositoryPort.existsByAccountNumber(anyString())).thenReturn(false);
+        when(accountNumberService.generateUniqueAccountNumber(ProductType.CURRENT_ACCOUNT)).thenReturn(generatedAccountNumber);
         when(productRepositoryPort.save(any(Product.class))).thenAnswer(invocation -> {
             Product product = invocation.getArgument(0);
             product.setId(UUID.randomUUID());
@@ -97,6 +101,7 @@ class ProductServiceTest {
         assertNotNull(result.getId());
         assertNotNull(result.getAccountNumber());
         assertTrue(result.getAccountNumber().startsWith("33"));
+        assertTrue(result.getAccountNumber() == generatedAccountNumber);
         assertEquals(ProductStatus.ACTIVE, result.getStatus());
         assertEquals(BigDecimal.valueOf(500.00), result.getBalance());
         assertTrue(result.isGmfExempt());
@@ -104,7 +109,7 @@ class ProductServiceTest {
         assertNotNull(result.getModificationDate());
         
         verify(clientRepositoryPort).findById(clientId);
-        verify(productRepositoryPort, atLeastOnce()).existsByAccountNumber(anyString());
+        verify(accountNumberService).generateUniqueAccountNumber(ProductType.CURRENT_ACCOUNT);
         verify(productRepositoryPort).save(any(Product.class));
     }
 
@@ -147,7 +152,6 @@ class ProductServiceTest {
         
         assertEquals("Client not found with id: " + clientId, exception.getMessage());
         verify(clientRepositoryPort).findById(clientId);
-        verify(productRepositoryPort, never()).existsByAccountNumber(anyString());
         verify(productRepositoryPort, never()).save(any(Product.class));
     }
 
@@ -160,12 +164,13 @@ class ProductServiceTest {
                 .clientId(clientId)
                 .build();
 
+        String generatedAccountNumber = "5309876543";
+
         when(clientRepositoryPort.findById(clientId)).thenReturn(Optional.of(validClient));
-        when(productRepositoryPort.existsByAccountNumber(anyString())).thenReturn(false);
+        when(accountNumberService.generateUniqueAccountNumber(ProductType.SAVINGS_ACCOUNT)).thenReturn(generatedAccountNumber);
         when(productRepositoryPort.save(any(Product.class))).thenAnswer(invocation -> {
             Product product = invocation.getArgument(0);
             product.setId(UUID.randomUUID());
-            product.setAccountNumber("5301234567");
             product.setStatus(ProductStatus.ACTIVE);
             product.setCreationDate(LocalDate.now());
             product.setModificationDate(LocalDate.now());
@@ -177,10 +182,11 @@ class ProductServiceTest {
         assertNotNull(result);
         assertEquals(ProductType.SAVINGS_ACCOUNT, result.getType());
         assertTrue(result.getAccountNumber().startsWith("53"));
+        assertTrue(result.getAccountNumber() == generatedAccountNumber);
         assertEquals(BigDecimal.valueOf(1000.00), result.getBalance());
         
         verify(clientRepositoryPort).findById(clientId);
-        verify(productRepositoryPort, atLeastOnce()).existsByAccountNumber(anyString());
+        verify(accountNumberService).generateUniqueAccountNumber(ProductType.SAVINGS_ACCOUNT);
         verify(productRepositoryPort).save(any(Product.class));
     }
 
