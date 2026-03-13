@@ -223,6 +223,8 @@ public class TransactionServiceTest {
                 .destinationProductId(sourceProductId)
                 .clientId(clientId)
                 .build();
+
+        when(productRepositoryPort.findById(sourceProductId)).thenReturn(Optional.of(sourceProduct));
         
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, 
                 () -> transactionService.executeTransaction(transfer));
@@ -240,6 +242,10 @@ public class TransactionServiceTest {
                 .destinationProductId(destinationProductId)
                 .clientId(clientId)
                 .build();
+
+        when(productRepositoryPort.findById(destinationProductId)).thenReturn(Optional.of(destinationProduct));
+        when(clientRepositoryPort.findById(clientId)).thenReturn(Optional.of(validClient));
+        
         
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, 
                 () -> transactionService.executeTransaction(transaction));
@@ -256,6 +262,8 @@ public class TransactionServiceTest {
                 .description("Missing destination")
                 .clientId(clientId)
                 .build();
+
+        when(clientRepositoryPort.findById(clientId)).thenReturn(Optional.of(validClient));
         
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, 
                 () -> transactionService.executeTransaction(transaction));
@@ -409,7 +417,6 @@ public class TransactionServiceTest {
                 .clientId(clientId)
                 .build();
         
-        when(clientRepositoryPort.findById(clientId)).thenReturn(Optional.of(validClient));
         when(productRepositoryPort.findById(destinationProductId))
                 .thenReturn(Optional.empty());
         
@@ -429,6 +436,9 @@ public class TransactionServiceTest {
                 .destinationProductId(destinationProductId)
                 .clientId(clientId)
                 .build();
+
+        when(productRepositoryPort.findById(destinationProductId)).thenReturn(Optional.of(destinationProduct));
+        when(clientRepositoryPort.findById(clientId)).thenReturn(Optional.of(validClient));
         
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, 
                 () -> transactionService.executeTransaction(transaction));
