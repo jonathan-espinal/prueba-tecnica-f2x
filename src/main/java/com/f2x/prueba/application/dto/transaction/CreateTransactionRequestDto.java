@@ -12,9 +12,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * DTO para la creación de una nueva transacción
- */
 @Data
 @Builder
 @NoArgsConstructor
@@ -30,7 +27,9 @@ public class CreateTransactionRequestDto {
     
     private String description;
     
-    private UUID sourceProductId;      // Requerido para WITHDRAWAL y TRANSFER
+    private UUID sourceProductId;
     
-    private UUID destinationProductId; // Requerido para DEPOSIT y TRANSFER
+    private UUID destinationProductId;
+
+    private UUID clientId;
 }
